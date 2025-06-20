@@ -1,11 +1,13 @@
 # this allows us to use code from
 # the open-source pygame library
 # throughout this file
+import sys
 import pygame
 from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
+from bullets import *
 
 def main():
     pygame.init()
@@ -17,11 +19,13 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
 
     #containers
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable)
+    Shot.containers = (shots, updatable, drawable)
 
     asteroid_field = AsteroidField()
 
@@ -36,6 +40,12 @@ def main():
                 return
         
         updatable.update(dt)
+
+        for object in asteroids:
+            if object.check_collision(player):
+                print("Game Over!")
+                sys.exit()
+
         screen.fill("black")
 
         for object in drawable:
